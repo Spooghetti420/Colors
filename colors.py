@@ -3,8 +3,6 @@ This moudle is made to encode xterm-256color escape sequences as convenient
 variables and functions for use in a command-line utility.
 """
 
-from typing import Callable, Sequence
-
 BLACK = "30"
 RED = "31"
 GREEN = "32"
@@ -66,6 +64,7 @@ def main():
     printc("Yellow bold text", BOLD, YELLOW)
     printc("Green bold text", BOLD, GREEN)
     printc("Blue bold text", BOLD, BLUE)
+    printc("Underlined text", UNDERLINE)
     print("Unaffected remainder text")
 
     printc("Black text on white background", BLACK, WHITE_BG)
@@ -74,7 +73,6 @@ def main():
     printc(" Rainbow! ", BLACK, BOLD, YELLOW_BG)
     printc(" "*10, GREEN_BG)
     printc(" "*10, BLUE_BG)
-
 
 if __name__ == "__main__":
     main()
