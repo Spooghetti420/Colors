@@ -1,6 +1,11 @@
+from __future__ import annotations
+import re
+from typing import Collection
+from dataclasses import dataclass
 """
-This moudle is made to encode xterm-256color escape sequences as convenient
+This module is made to encode xterm-256color escape sequences as convenient
 variables and functions for use in a command-line utility.
+A newer update has made it more featureful to allow nested behaviour.
 """
 
 BLACK = "30"
@@ -29,29 +34,36 @@ BOLD_OFF = "21"
 UNDERLINE_OFF = "24"
 INVERSE_OFF = "27"
 
+@dataclass
+class FormattedText:
+    text: Collection[str | FormattedText]
+    formatting: set[str] # One of the above color constants
 
-def wrap_string(s: str, start_wrapping: str, end_wrapping=None) -> str:
-    """
-    Surrounds the input string `s` in the input wrapping.
-    If the string is to be wrapped in two separate wrappings,
-    one start and one end, then the `end_wrapping` can be specified
-    separately. Else, if the end wrapping is not specified, it
-    defaults to the start wrapping.
-    """
-    return f"{start_wrapping}{s}{end_wrapping if end_wrapping is not None else start_wrapping}"
+    NEIGHBOURING_ESCAPE_CODE_PATTERN = re.compile("\033\[0m(\033\[\d+(?:; *\d+)*m)")
 
+    def get_escape_code(self):
+        if self.formatting:
+            return f'\033[{";".join(self.formatting)}m'
+        return ""
 
-def wrap_colors(s: str, *colors: str) -> str:
-    """
-    Returns a string corresponding to the escape sequence for a
-    number of terminal colors, followed by the escape sequence to reset the color.  
-    """
-    return wrap_string(s, f'\033[{";".join(colors)}m', f'\033[{RESET}m')
+    def render(self, /, compress=False) -> str:
+        output_str = self.get_escape_code()
+        for t in self.text:
+            if isinstance(t, str):
+                output_str += t
+            elif isinstance(t, FormattedText):
+                output_str += t.render() + self.get_escape_code()
 
+        if not output_str.endswith(f'\033[{RESET}m'):
+            output_str += f'\033[{RESET}m'
 
-def printc(s: str, *formats, **kwargs):
-    """
-    Prints a string with a list of formatting options.
-    Use `kwargs` for options to the `print` function.
-    """
-    print(wrap_colors(s, *formats), **kwargs)
+        if compress:
+            output_str = re.sub(FormattedText.NEIGHBOURING_ESCAPE_CODE_PATTERN, "\1", output_str)
+        
+        return output_str
+
+    def print(self, *args) -> None:
+        print(self.render(), *args)
+
+def printc(text, formatting, *args) -> None:
+    return FormattedText(text, formatting).print(*args)
