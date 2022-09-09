@@ -21,16 +21,16 @@ def main():
             ["Red "], {RED, BOLD}
         ),
         fmt(
-            ["Yellow"], {YELLOW, BOLD}
+            ["Yellow "], {YELLOW, BOLD}
         ),
         fmt(
-            ["Green"], {GREEN, BOLD}
+            ["Green "], {GREEN, BOLD}
         ),
         fmt(
-            ["Blue"], {BLUE, BOLD}
+            ["Blue "], {BLUE, BOLD}
         ),
         fmt (
-            ["Magenta"], {MAGENTA, BOLD}
+            ["Magenta "], {MAGENTA, BOLD}
         )
 
         ], {}
