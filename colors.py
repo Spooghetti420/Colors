@@ -1,7 +1,6 @@
 from __future__ import annotations
 import re
-from tkinter.font import ITALIC
-from typing import Collection, NewType, Union
+from typing import Collection, Union
 from dataclasses import dataclass
 """
 This module is made to encode xterm-256color escape sequences as convenient
@@ -76,6 +75,6 @@ def bold(text: Textlike) -> FormattedText:
     """Embolden a string."""
     return FormattedText([text], {BOLD})
 
-def italic(text: Textlike) -> FormattedText:
+def underline(text: Textlike) -> FormattedText:
     """Italicise a string."""
-    return FormattedText([text], {ITALIC})
+    return FormattedText([text], {UNDERLINE})
