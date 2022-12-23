@@ -1,6 +1,7 @@
 from __future__ import annotations
 import re
-from typing import Collection
+from tkinter.font import ITALIC
+from typing import Collection, NewType, Union
 from dataclasses import dataclass
 """
 This module is made to encode xterm-256color escape sequences as convenient
@@ -36,7 +37,7 @@ INVERSE_OFF = "27"
 
 @dataclass
 class FormattedText:
-    text: Collection[str | FormattedText]
+    text: Collection[Textlike]
     formatting: set[str] # One of the above color constants
 
     NEIGHBOURING_ESCAPE_CODE_PATTERN = re.compile("\033\[0m(\033\[\d+(?:; *\d+)*m)")
@@ -66,4 +67,15 @@ class FormattedText:
         print(self.render(), *args)
 
 def printc(text, formatting, *args) -> None:
+    """Print stylised text."""
     return FormattedText(text, formatting).print(*args)
+
+Textlike = NewType(Union[FormattedText, str])
+
+def bold(text: Textlike) -> FormattedText:
+    """Embolden a string."""
+    return FormattedText([text], {BOLD})
+
+def italic(text: Textlike) -> FormattedText:
+    """Italicise a string."""
+    return FormattedText([text], {ITALIC})
