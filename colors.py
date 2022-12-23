@@ -70,7 +70,7 @@ def printc(text, formatting, *args) -> None:
     """Print stylised text."""
     return FormattedText(text, formatting).print(*args)
 
-Textlike = NewType(Union[FormattedText, str])
+Textlike = Union[FormattedText, str]
 
 def bold(text: Textlike) -> FormattedText:
     """Embolden a string."""
