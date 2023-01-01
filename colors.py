@@ -62,12 +62,12 @@ class FormattedText:
         
         return output_str
 
-    def print(self, *args) -> None:
-        print(self.render(), *args)
+    def print(self, *args, **kwargs) -> None:
+        print(self.render(), *args, **kwargs)
 
-def printc(text, formatting, *args) -> None:
+def printc(text, formatting, *args, **kwargs) -> None:
     """Print stylised text."""
-    return FormattedText(text, formatting).print(*args)
+    return FormattedText(text, formatting).print(*args, **kwargs)
 
 Textlike = Union[FormattedText, str]
 
